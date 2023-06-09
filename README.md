@@ -1,6 +1,6 @@
 # Summer Course Latent Variable Modeling 2023
 
-From this repository, we will share all materials (slides, datasets, exercises, answers to exercises) for the course.
+From this repository, we will share all materials (slides, datasets, exercises, answers to exercises) for the course. A separate folder will be created for each of the morning and afternoon sessions.
 
 Locations:
 
@@ -13,25 +13,25 @@ Times:
 * Morning session are from 10:00 – 13:00
 * Afternoon sessions are from 14:00 – 17:00
 
-Topics:
+Topics and instructor:
 
 Monday:
 
-Morning: Introduction, lecturer: Marjolein Fokkema
+Morning: Introduction, instructor: Marjolein Fokkema
 
-Afternoon: Basic Confirmatory Factor Analyses, lecturer: Mathilde Verdam
+Afternoon: Basic Confirmatory Factor Analyses, instructor: Mathilde Verdam
 
 Wednesday:
 
-Morning: Latent growth curves (incl. panel models), lecturer Mathilde Verdam
+Morning: Latent growth curves (incl. panel models), instructor: Mathilde Verdam
 
-Afternoon: Ordered-categorical indicators, lecturer: Marjolein Fokkema
+Afternoon: Ordered-categorical indicators, instructor: Marjolein Fokkema
 
 Friday:
 
-Morning: Multigroup Models, lecturer: Mathilde Verdam
+Morning: Multigroup Models, instructor: Mathilde Verdam
 
-Afternoon: Miscellaneous (send your topic and model requests!), lecturer: Marjolein Fokkema
+Afternoon: Miscellaneous (send your topic and model requests!), instructor: Marjolein Fokkema
 
 
 
