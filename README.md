@@ -17,21 +17,21 @@ Topics and instructor:
 
 Monday:
 
-Morning: Introduction, instructor: Marjolein Fokkema
+* Morning: Introduction, instructor: Marjolein Fokkema
 
-Afternoon: Basic Confirmatory Factor Analyses, instructor: Mathilde Verdam
+* Afternoon: Basic Confirmatory Factor Analyses, instructor: Mathilde Verdam
 
 Wednesday:
 
-Morning: Latent growth curves (incl. panel models), instructor: Mathilde Verdam
+* Morning: Latent growth curves (incl. panel models), instructor: Mathilde Verdam
 
-Afternoon: Ordered-categorical indicators, instructor: Marjolein Fokkema
+* Afternoon: Ordered-categorical indicators, instructor: Marjolein Fokkema
 
 Friday:
 
-Morning: Multigroup Models, instructor: Mathilde Verdam
+* Morning: Multigroup Models, instructor: Mathilde Verdam
 
-Afternoon: Miscellaneous (send your topic and model requests!), instructor: Marjolein Fokkema
+* Afternoon: Miscellaneous (send your topic and model requests!), instructor: Marjolein Fokkema
 
 
 
