@@ -18,16 +18,19 @@ Topics:
 Monday:
 
 1 Introduction, lecturer: Marjolein Fokkema
+
 2 Basic Confirmatory Factor Analyses, lecturer: Mathilde Verdam
 
 Wednesday:
 
 3 Latent growth curves (incl. panel models), lecturer Mathilde Verdam
+
 4 Ordered-categorical indicators, lecturer: Marjolein Fokkema
 
 Friday:
 
 5 Multigroup Models, lecturer: Mathilde Verdam
+
 6 Miscellaneous (send your topic and model requests!), lecturer: Marjolein Fokkema
 
 
