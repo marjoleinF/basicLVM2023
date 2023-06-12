@@ -1,5 +1,5 @@
 ---
-title: "Example 2.4.1 - Fitting a path model with observed variables only, extracting model parameter matrices and tables in APA format"
+title: "Example 2.4.1 - Fitting a path model with observed variables only, extracting model parameter matrices and tables"
 output:
   pdf_document: default
   word_document: default
