@@ -1,0 +1,163 @@
+---
+title: Answers to exercises LVM session 1
+output:
+  pdf_document: default
+---
+
+# Exercise 2.1
+
+a)  Load packages and data:
+
+```{r, message=FALSE, warning=FALSE}
+library("lavaan")
+Math.data <- read.table("MathHmwk.txt", header = TRUE)
+```
+
+Fit a linear regression model:
+
+```{r}
+Math.lm <- lm(MathAchievement ~ MathHomework, data = Math.data)
+Math.lm
+```
+
+The correlation between `MathHomework` and `MathAchievement`:
+
+```{r}
+obs_cor <- coef(Math.lm)[2] * sd(Math.data$MathHomework) / sd(Math.data$MathAchievement)
+obs_cor
+```
+
+b)  The standardized and unstandardized path diagrams of the regression look as follows:
+
+```{r, fig=TRUE, echo=FALSE, out.width = '40%'}
+knitr::include_graphics("Diagram exercise 2.1c.png")
+```
+
+The path diagrams would be even more complete, if a variance for Math Homework and a residual variance for Math Achievement would have been included.
+
+c)  Fit the SEM model:
+
+```{r}
+Math.model <- '
+  MathAchievement ~ MathHomework
+'
+Math.fit <- sem(Math.model, data = Math.data)
+summary(Math.fit, standardized = TRUE)
+```
+
+d)  The results in a) and d) give the same standardized and unstandardized parameter estimates.
+
+
+
+# Exercise 2.2
+
+a)  The exogenous variables is Race. The endogenous variables are SES, Cognitive Abilities, School Type and Academic Achievement.
+
+b)  Supply the correlation matrix:
+
+```{r}
+HighSchool.cor <- lav_matrix_lower2full(c(
+  1.000,
+  0.178, 1.000, 
+  0.230, 0.327, 1.000,
+  0.106, 0.245, 0.183, 1.000,
+  0.195, 0.356, 0.721, 0.178, 1.000
+))
+rownames(HighSchool.cor) <- colnames(HighSchool.cor) <- 
+  c("Race", "SES", "CognAb", "SchoolTy", "AcAch")
+```
+
+Specify the model:
+
+```{r}
+HighSchool.mod <- '
+  CognAb ~ Race + SES
+  SES ~ Race
+  SchoolTy ~ SES + Race + CognAb
+  AcAch ~ Race + SES + SchoolTy + CognAb
+'
+HighSchool.fit <- sem(HighSchool.mod, sample.cov = HighSchool.cor, 
+                      sample.nobs = 18058)
+summary(HighSchool.fit, standardized = TRUE)
+```
+
+c)  Schooltype has a (very) small positive effect on Academic Achievement, but it is statistically significant (because the sample size is very large).
+
+d)  The zero-order, bivariate correlation between Race and Academic Achievement was .195.
+
+e)  The standardized direct effect of Race on Academic Achievement in the model we fitted is .015 (but with $> 18,000$ observations, still significant).
+
+f)  The SEM model 'explains' the observed correlation between Race and Academic Achievement through indirect effects via SES, Cognitive Abilities and School Type.
+
+g)  To assume that Race 'causes' Academic Achievement or Cognitive Ability is probably ridiculous. There are probably additional social, economic or other factors at play, that can explain this association, but that are not included in the model. Thus, our model does not provide a complete explanation of reality, but does provide insight into how these variables are associated in the real world, and how some associations can be in large part explained by other variables.
+
+\newpage
+
+# Exercise 2.3
+
+a)  The endogenous variables are Social Climate, Material Covered and Student Achievement. The exogenous variable in the model is Teacher Expectancies.
+
+We read in the covariance matrix:
+
+```{r}
+MacKinnon.cov <- lav_matrix_lower2full(c(
+  84.85, 
+  71.28, 140.34, 
+  18.83,  -6.25, 72.92, 
+  60.05,  84.54, 37.18, 139.48
+))
+rownames(MacKinnon.cov) <- colnames(MacKinnon.cov) <- 
+  c("TeachExp", "SocCli", "MatCov", "StudAch")
+```
+
+b)  The original bivariate correlation between Teacher Expectancies and Student Achievement is `r round(cov2cor(MacKinnon.cov)[4,1], digits = 3)`:
+
+```{r}
+cov2cor(MacKinnon.cov)
+```
+
+c)  Read in the covariance matrix:
+
+```{r}
+MacKinnon.cov <- lav_matrix_lower2full(c(
+  84.85, 
+  71.28, 140.34, 
+  18.83,  -6.25, 72.92, 
+  60.05,  84.54, 37.18, 139.48
+))
+rownames(MacKinnon.cov) <- colnames(MacKinnon.cov) <- 
+  c("TeachExp", "SocCli", "MatCov", "StudAch")
+```
+
+Write the syntax:
+
+```{r}
+MacKinnon.mod <- '
+  SocCli ~ a1*TeachExp
+  MatCov ~ a2*TeachExp
+  StudAch ~ TeachExp + b1*SocCli + b2*MatCov
+  a1b1 := a1*b1
+  a2b2 := a2*b2
+'
+```
+
+Fit the model to the data:
+
+```{r}
+MacKinnon.fit <- sem(MacKinnon.mod, sample.cov = MacKinnon.cov, 
+                     sample.nobs = 40, fixed.x = FALSE)  
+summary(MacKinnon.fit, standardized = TRUE)
+```
+
+The direct effect of Teacher Expectancies on Student Achievement is $\hat{b} = 0.112$, the standardized value is 0.084, and it is not significant. The original bivariate association is mostly explained by the indirect effect through Social Climate. There thus seems to be mediation.
+
+Note that lavaan by default does not include (co)variances of exogenous variables in the output. They are assumed equal to the sample values, but not explicitly included as model parameters. To explicitly include (co)variances of exogenous variables as parameters in our model, we need to override the default specification, by adding `fixed.x = FALSE` (`fixed.x = TRUE` is the default). This will not affect the parameter estimates or the fit of our model, but merely yields more parameter estimates in the output.
+
+d)  We request the $\hat{\beta}$ and $\hat{\psi}$ matrices as follows:
+
+```{r}
+beta <- inspect(MacKinnon.fit, "coef")$beta
+beta
+psi <- inspect(MacKinnon.fit, "coef")$psi
+psi
+```
