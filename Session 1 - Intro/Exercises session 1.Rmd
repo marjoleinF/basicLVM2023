@@ -1,5 +1,5 @@
 ---
-title: Exercises LVM week 1 - Introduction
+title: Exercises LVM session 1 - Introduction
 output:
   pdf_document: default
 ---
@@ -63,6 +63,9 @@ f) How does the SEM model 'explain' the difference between the answers on parts 
 g) Do you think Race 'causes' cognitive ability, school type and academic achievement?
   
   
+```{r, fig=TRUE, echo=FALSE, out.width = '80%'}
+knitr::include_graphics("Figures_2.9_2.10.png")
+```
   
 # Exercise 2.3
 
@@ -86,4 +89,5 @@ b) What is the original bivariate correlation between teacher expectancies and s
 c) Write the model in lavaan syntax. Use the `:=` operator to define both indirect effects from teacher expectancies to student achievement (a1×b1 and a2×b2). Fit the model to the data. What is the direct effect of teacher expectancies on student achievement? what are the indirect effects (i.e., through social climate and material covered)? According to the model, is the assocation between teacher expectancies and student achievement mediated by social climate and material covered?
 
 d) Using the results of your analysis, write out the $\mathbf{\beta}$ and $\Psi$ matrices. (Hint: ignore the indirect paths, include only direct paths between variables.)
+
 

@@ -65,7 +65,7 @@ Note that you can also compile Markdown documents (.Rmd files) as Word documents
 
 Check out the Markdown file and compare to the compiled .docx and .pdf files to see how the look of the final document can be controlled.
 
-The table still needs some manual adjustments, of course (e.g., $p$-values should never be written as 0.000, but as $< .001). Note that you can use function `kable` from package `kableExtra` to have more control over how the final tables look. This can be very helpful for publications (but outside the scope of this course).
+The table still needs some manual adjustments, of course (e.g., $p$-values should never be written as 0.000, but as $< .001$). Note that you can use function `kable` from package `kableExtra` to have more control over how the final tables look. This can be very helpful for publications (but outside the scope of this course).
 
 ```{r, echo=FALSE}
 ## If I want to hide a piece of code, I use "echo = FALSE" as a chunk options
