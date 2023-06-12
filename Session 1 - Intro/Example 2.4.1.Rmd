@@ -1,0 +1,81 @@
+---
+title: "Example 2.4.1 - Fitting a path model with observed variables only, extracting model parameter matrices and tables in APA format"
+output:
+  pdf_document: default
+  word_document: default
+---
+
+# Fitting a path model with observed variables only
+
+First, we execute the code from the book. We load the package:
+
+```{r, message = FALSE, warning = FALSE}
+library("lavaan")
+library("knitr")
+```
+
+Next, we load the input data (a covariance matrix, in this case):
+
+```{r}
+beaujean.cov <- lav_matrix_lower2full(c(648.07, 30.05, 8.64, 140.18, 25.57, 233.21))
+colnames(beaujean.cov) <- rownames(beaujean.cov) <- c("salary", "school", "iq")
+```
+
+Next, we specify the model:
+
+```{r}
+beaujean.model <- '
+  salary ~ a*school + c*iq
+  iq ~ b*school # this was reversed in first printing of the book 
+  ind:= b*c 
+'
+```
+
+Finally, we fit the model to the data and inspect the result:
+
+```{r}
+beaujean.fit <- sem(beaujean.model, sample.cov=beaujean.cov, sample.nobs=300)
+summary(beaujean.fit, standardized = TRUE, fit.measures = TRUE, rsquare = TRUE, 
+        modindices = TRUE)
+```
+
+
+# Extracting matrices with parameter estimates
+
+The parameter estimates (or coefficients) can be obtained from the fitted model as follows:
+
+```{r}
+coefs <- inspect(beaujean.fit, "coef")
+coefs$beta
+coefs$psi
+```
+
+Here we see that $\psi$ is a symmetric matrix, giving the (co)variances; $\beta$ is a non-symmetric matrix, giving the regression coefficients. 
+
+
+# Obtaining tables for a paper
+
+To copy the results to a paper, we use function `kable` from package `knitr`:
+
+```{r}
+kable(parameterEstimates(beaujean.fit), digits = 3)
+```
+
+Note that you can also compile Markdown documents (.Rmd files) as Word documents. As you can see in the github repository, the documents for this example are available as an R Markdown file, which allows you to combine text, code and results. The code can be run and the document compiled in R Studio by clicking the "Knit" button. 
+
+Check out the Markdown file and compare to the compiled .docx and .pdf files to see how the look of the final document can be controlled.
+
+The table still needs some manual adjustments, of course (e.g., $p$-values should never be written as 0.000, but as $< .001). Note that you can use function `kable` from package `kableExtra` to have more control over how the final tables look. This can be very helpful for publications (but outside the scope of this course).
+
+```{r, echo=FALSE}
+## If I want to hide a piece of code, I use "echo = FALSE" as a chunk options
+## By default, "echo=TRUE", so all R code will be printed to the document
+```
+
+```{r, echo=FALSE, results='hide'}
+## If I want to run a piece of code, but not show the output, I use "results = 'hide'"
+```
+
+```{r, echo=FALSE, eval=FALSE}
+## If I want to show a piece of code in the document, but not run it, I use "eval=FALSE"
+```
