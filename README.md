@@ -6,7 +6,7 @@ Locations:
 
 * Monday: PdlC 1A11
 * Wednesday: PdlC 0B23
-* Friday: PdlC 0B13
+* Friday: PdlC 1A49
 
 Times:
 
