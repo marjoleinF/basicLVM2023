@@ -19,7 +19,7 @@ Math.data <- read.table("MathHmwk.txt", header = TRUE)
 
 The dataset contains 100 observations on two variables: (a) number of hours typically spent completing math homework (`MathHomework`), and (b) score on a standardized math achievement test (`MathAchievement`). The question of interest is: How does time spent on math homework affect math achievement?
 
-a) Perform a linear regression analysis using the `lm()` function. Also compute the correlation coefficient between `MathHomework` and `MathAchievement` (remember that $r_{xy} = b_x \frac{s_x}{s_y}$).
+a) Perform a linear regression analysis using the lm()` function. Also compute the correlation coefficient between `MathHomework` and `MathAchievement` (remember that $r_{xy} = b_x \frac{s_x}{s_y}$).
 
 b) Draw a standardized path model of the regression (in a standardized path model, the variables have a variance of one and a mean of zero; the means may therefore be omitted). 
 
@@ -34,7 +34,7 @@ d) How are the results in part d) related to the results from part b)?
   
 # Exercise 2.2
 
-Page and Keith (1981) usea sample from the *1980 High School and Beyond* study to investigate the following question: What is the relationship between school type and academic achievement? The data are given below and a path model for the analysis is shown in Beaujean Figure 2.9.
+Page and Keith (1981) usea sample from the *1980 High School and Beyond* study to investigate the following question: What is the relationship between school type and academic achievement? The data are given below and a path model for the analysis is shown in Beaujean Figure 2.9. The sample size is $n = 18,058$.
 
 ```{r}
 HighSchool.cor <- lav_matrix_lower2full(c(
@@ -69,7 +69,7 @@ knitr::include_graphics("Figures_2.9_2.10.png")
   
 # Exercise 2.3
 
-MacKinnon (2008, p. 113) provides a dataset from a hypothetical study of teacher expectancies and student achievement. His path model is shown in Beaujean Figure 2.10 and the sample covariances are given below:
+MacKinnon (2008, p. 113) provides a dataset from a hypothetical study of teacher expectancies and student achievement. His path model is shown in Beaujean Figure 2.10 and the sample covariances are given below. The sample size is $n = 40$.
 
 ```{r}
 MacKinnon.cov <- lav_matrix_lower2full(c(
