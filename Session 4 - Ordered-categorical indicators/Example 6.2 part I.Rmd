@@ -1,0 +1,50 @@
+---
+output: pdf_document
+title: Example 6.2 - Ordered-categorical indicator variables, Part I
+---
+
+The data for this example are responses to five items of the LSAT Figure Classification test:
+
+```{r}
+library("psych")
+head(lsat6)
+```
+
+For more info on the data, type `?lsat`.
+
+First we take a look at the tetrachoric correlations between items:
+
+```{r}
+tet <- tetrachoric(lsat6)
+tet
+round(cor(lsat6), digits = 3)
+```
+
+We see that the tetrachoric correlations, which account for the binary nature of the items, are higher than the Pearson correlations (calculated with `cor()`). This is what we generally see: for binary items, the Pearson correlation underestimates the strength of associations.    
+
+The tetrachoric correlation matrix also provides us with item thresholds. Lower values indicate easier items.
+  
+We also inspect item means (i.e., proportion of respondents who had the items correct):
+
+```{r}
+sort(colMeans(lsat6), decreasing = TRUE)
+sort(tet$tau)
+```
+
+The thresholds and item means indicate the same ordering of items in terms of difficulty: The most difficult item is Q3, the easiest item is Q1.
+
+Next we perform a CFA:
+
+```{r, message=FALSE, warning=FALSE}
+library("lavaan")
+model.CFA <- '
+  Theta =~ Q1 + Q2 + Q3 + Q4 + Q5
+'
+fit.CFA <- cfa(model.CFA, data = data.frame(lsat6), ordered = paste0("Q", 1:5))
+paste0("Q", 1:5)
+summary(fit.CFA, standardized = TRUE, fit.measures = TRUE)
+```
+
+Because we declared the items as ordered-categorical, the DWLS (diagonally weighted least squares) estimator was used. This provides standard and robust (robust against deviations from normality) fit indices, by default.
+
+The model fits very well according to all fit measures. All loadings are substantial and significant. The most difficult item is Q3, easiest item is Q1. Also, Q3 is the strongest indicator of the latent trait, Q5 the weakest indicator.
