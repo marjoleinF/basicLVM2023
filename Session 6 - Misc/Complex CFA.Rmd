@@ -112,7 +112,7 @@ plot(pars$est[pars$rhs == "t2"], col = pars$group[pars$rhs == "t2"],
      xlab = "parameter number (meaningless)",
      ylab = "Parameter estimate")
 ```
-There seems to be a systematic tendency for higher thresholds in the second group.
+There seems to be a systematic tendency for higher thresholds in the second group. This might explain why fixing them to be equal between groups is problematic.
 
 
 

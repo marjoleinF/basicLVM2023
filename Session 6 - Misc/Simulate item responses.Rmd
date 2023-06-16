@@ -79,4 +79,6 @@ summary(fit, standardized = TRUE)
 
 ```{r}
 saveRDS(item_data2, file = "Item data.Rda")
+item_dat <- readRDS(file = "Item data.Rda")
+summary(item_dat)
 ```
