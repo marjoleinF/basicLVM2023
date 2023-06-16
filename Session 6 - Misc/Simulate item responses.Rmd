@@ -1,0 +1,82 @@
+---
+title: "Simulate friendship questionnaire data"
+author: "Marjolein Fokkema"
+date: "16-3-2023"
+output: pdf_document
+---
+
+I'll assume 750 respondents.
+
+A total of 53 items: 13 items (for subconstruct Satisfaction) + 5*8 items (for each of the facets of subconstruct Value). Each item has an ordered-categorical response with 3 options (do not agree, partly agree, fully agree).
+
+Generate continuous LVs:
+
+```{r}
+n <- 750
+friendship <- rnorm(n)
+satisfaction <- friendship + rnorm(n) 
+items_satisf <- data.frame(replicate(13, satisfaction + rnorm(n)))
+names(items_satisf) <- paste0("satsisf_", 1:13)
+
+value <- friendship + rnorm(750) 
+
+closeness <- value + rnorm(750) 
+items_closen <- data.frame(replicate(8, closeness + rnorm(n)))
+names(items_closen) <- paste0("closen_", 1:8)
+
+commonality <- value + rnorm(750) 
+items_common <- data.frame(replicate(8, commonality + rnorm(n)))
+names(items_common) <- paste0("common_", 1:8)
+
+security <- value + rnorm(750) 
+items_secur <- data.frame(replicate(8, security + rnorm(n)))
+names(items_secur) <- paste0("secur_", 1:8)
+
+four <- value + rnorm(750) 
+items_four <- data.frame(replicate(8, four + rnorm(n)))
+names(items_four) <- paste0("four_", 1:8)
+
+five <- value + rnorm(750) 
+items_five <- data.frame(replicate(8, five + rnorm(n)))
+names(items_five) <- paste0("five_", 1:8)
+
+item_data <- cbind(items_satisf, items_closen, items_common, items_secur + 
+                     items_four, items_five)
+```
+
+
+Introduce thresholds:
+
+```{r}
+sapply(item_data, mean)
+sapply(item_data, sd)
+## first threshold: -1.75
+## second threshold: 1.75
+thresh1 <- rnorm(ncol(item_data), mean = -1.75, sd = .5)
+thresh2 <- rnorm(ncol(item_data), mean = 1.75, sd = .5)
+
+item_data2 <- item_data
+for (i in 1:ncol(item_data)) {
+  item_data2[ , i] <- ifelse(item_data[ , i] < thresh1[i], 1L, 2L) 
+  item_data2[ , i] <- ifelse(item_data[ , i] > thresh2[i], 3L, item_data2[ , i]) 
+  item_data2[ , i] <- factor(item_data2[ , i])
+  levels(item_data2[ , i]) <- c("not_agree", "partial_agree", "fully_agree")
+}
+item_data <- item_data2
+sapply(item_data, table)
+```
+
+
+Fit SEM:
+
+```{r}
+library("lavaan")
+mod <- paste("F1 =~ ", paste(names(item_data), collapse = "+"))
+fit <- cfa(mod, data = item_data2, ordered = names(item_data2))
+summary(fit, standardized = TRUE)
+```
+
+
+```{r}
+saveRDS(item_data2, file = "Item data.Rda")
+```
