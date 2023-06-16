@@ -1,0 +1,118 @@
+---
+title: "Complex CFA"
+author: "Marjolein Fokkema"
+date: "16-6-2023"
+output: pdf_document
+---
+
+# Load and inspect data
+
+I would check if I have enough observations for each category, if we're dealing with ordered-categorical data.
+
+```{r}
+item_dat <- readRDS(file = "Item data.Rda")
+summary(item_dat)
+``` 
+
+
+```{r}
+library("lavaan")
+names(item_dat)
+mod <- '
+  satisf =~ satsisf_1 + satsisf_2 + satsisf_3 + satsisf_4 + satsisf_5 +
+  satsisf_6 + satsisf_7 + satsisf_8 + satsisf_9 + satsisf_10 + satsisf_11 + 
+  satsisf_12 + satsisf_13
+  
+  closen =~ closen_1 + closen_2 + closen_3 + closen_4 + closen_5 + closen_6 + 
+  closen_7 + closen_8 
+  
+  common =~ common_1 + common_2 + common_3 + common_4 + common_5 + common_6 + 
+  common_7 + common_8 
+  
+  secur =~ secur_1 + secur_2 + secur_3 + secur_4 + secur_5 + secur_6 + 
+  secur_7 + secur_8 
+  
+  five =~ five_1 + five_2 + five_3 + five_4 + five_5 + five_6 + 
+  five_7 + five_8 
+  
+  value =~ closen + common + secur + five
+  
+  friendship =~ lambda*satisf + lambda*value
+
+'
+fit <- cfa(mod, data = item_dat, ordered = names(item_dat))
+summary(fit, standardized=TRUE, fit.measures=TRUE)
+```
+
+
+# Multigroup / measurement invariance
+
+```{r}
+total_score <- rowSums(sapply(item_dat, as.numeric)) 
+total_score <- total_score / max(total_score)
+set.seed(42)
+autism <- 1 - rbinom(750, 1, prob = total_score)
+tapply(total_score, autism, mean)
+tapply(total_score, autism, sd)
+```
+
+```{r}
+item_dat$autism <- autism
+
+## Configural invariance model (same patterns)
+fit.c <- cfa(mod, data = item_dat, ordered = names(item_dat), group = "autism")
+summary(fit.c, standardized=TRUE, fit.measures=TRUE)
+
+## Metric invariance model (same loadings)
+fit.m <- cfa(mod, data = item_dat, ordered = names(item_dat), group = "autism",
+            group.equal = c("loadings"))
+summary(fit.m, standardized=TRUE, fit.measures=TRUE)
+
+## Compare fit
+anova(fit.m, fit.c)
+```
+
+
+```{r}
+## Threshold invariance model (same loadings, same thresholds)
+fit.t <- cfa(mod, data = item_dat, ordered = names(item_dat), group = "autism",
+            group.equal = c("loadings", "thresholds"))
+```
+
+We get a lot of warnings, which may indicate something wrong with the model. We print the model anyway:
+
+```{r}
+summary(fit.t, standardized=TRUE, fit.measures=TRUE)
+```
+ 
+Identification restrictions seem to have been applied correctly, so that does not seem to be problematic.
+
+```{r}
+## Compare fit
+anova(fit.m, fit.t)
+```
+
+The fit comparison yields lower $\chi^2$ for the more parsimonious model, which should not happen, so I distrust the threshold invariance model.
+
+I would inspect the estimated thresholds from the configural invariance model. There are quite a few, so plotting might help:
+
+```{r, fig.height=3, fig.width=7}
+pars <- parameterestimates(fit.m)
+pars <- pars[order(pars$lhs), ]
+pars <- pars[pars$op == "|", ]
+par(mfrow = c(1, 2))
+plot(pars$est[pars$rhs == "t1"], col = pars$group[pars$rhs == "t1"],
+     main = "First thresholds for the items, color reflects group", 
+     cex.main = .6, cex = .7, cex.lab = .7, cex.axis = .7, 
+     xlab = "parameter number (meaningless)",
+     ylab = "Parameter estimate")
+plot(pars$est[pars$rhs == "t2"], col = pars$group[pars$rhs == "t2"],
+     main = "Second thresholds for the items, color reflects group",
+     cex.main = .6, cex = .7, cex.lab = .7, cex.axis = .7,
+     xlab = "parameter number (meaningless)",
+     ylab = "Parameter estimate")
+```
+There seems to be a systematic tendency for higher thresholds in the second group.
+
+
+
