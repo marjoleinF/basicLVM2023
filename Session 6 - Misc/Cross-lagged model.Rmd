@@ -1,0 +1,76 @@
+---
+title: "Cross-lagged model"
+author: "Marjolein Fokkema"
+date: "16-6-2023"
+output: pdf_document
+---
+
+SMA: Social-media addiction
+
+a is for adolescent, p is for parent
+
+ACEs adverse childhood experiences
+
+3 timepoints (baseline 13/14 years, 1 years between timepoint)
+
+```{r}
+## sample size is 250
+## with 9 variables, we have 9*(9+1)/2 = 45 sample parameters
+
+## This is the model from the picture, with a few changes:
+## Associations between ACEs at the different timepoints is now directional
+## Arrows added:  SMA_a_t2 ~~ SMA_p_t2 and  ACEs_t3 ~ ACEs_t1
+### .... possibly some other differences ....
+mod <- '
+
+  SMA_a_t1 ~ ACEs_t1
+  SMA_a_t2 ~ ACEs_t2
+  SMA_a_t3 ~ ACEs_t3
+  
+  SMA_a_t2 ~ SMA_a_t1
+  SMA_a_t3 ~ SMA_a_t1
+  SMA_a_t3 ~ SMA_a_t2
+  
+  SMA_p_t1 ~ ACEs_t1
+  SMA_p_t2 ~ ACEs_t2
+  SMA_p_t3 ~ ACEs_t3
+    
+  SMA_p_t2 ~ SMA_p_t1
+  SMA_p_t3 ~ SMA_p_t1
+  SMA_p_t3 ~ SMA_p_t2
+  
+  ACEs_t2 ~ ACEs_t1
+  ACEs_t3 ~ ACEs_t1
+  ACEs_t3 ~ ACEs_t2  
+  
+  SMA_a_t1 ~~ SMA_p_t1
+  SMA_a_t2 ~~ SMA_p_t2
+  SMA_a_t3 ~~ SMA_p_t3
+  
+'
+```
+
+
+## Model for parents only
+
+```{r}
+mod.p <- '
+  
+  SMA_p_t1 ~ ACEs_t1
+  SMA_p_t2 ~ ACEs_t2
+  SMA_p_t3 ~ ACEs_t3
+    
+  SMA_p_t2 ~ SMA_p_t1
+  SMA_p_t3 ~ SMA_p_t1
+  SMA_p_t3 ~ SMA_p_t2
+  
+  ACEs_t2 ~ ACEs_t1
+  ACEs_t3 ~ ACEs_t1
+  ACEs_t3 ~ ACEs_t2  
+  
+  SMA_p_t2 ~ ACE_t1 
+  SMA_p_t3 ~ ACE_t2 
+  SMA_p_t3 ~ ACE_t1 
+
+'
+```
